@@ -5,14 +5,14 @@ logicalstr = ["false", "true"];
 isstable = all(real(ev)<0);
 reach = ctrb(A,B);
 obs = obsv(A,C);
-isreach = rank(reach)==rank(A);
-isobs = rank(obs)==rank(A);
-fprintf("System stable: %s\nSystem reachable: %s\nSystem observable: %s\n",logicalstr(isstable+1),logicalstr(isreach+1),logicalstr(isobs+1));
 sys = ss(A,B,C,D);
 [H,wout] = freqresp(sys);
 %% Compute Gramians
 P = gram(sys,'c');
 Q = gram(sys,'o');
+isreach = rank(P)==rank(A);
+isobs = rank(Q)==rank(A);
+fprintf("System stable: %s\nSystem reachable: %s\nSystem observable: %s\n",logicalstr(isstable+1),logicalstr(isreach+1),logicalstr(isobs+1));
 %% Make balanced representation
 R = chol(P); 
 R = R'; % matlab choleski suxx
@@ -26,7 +26,7 @@ sys_n = ss(An,Bn,Cn,Dn);
 Pn = gram(sys_n,'c');
 Qn = gram(sys_n,'o');
 %% make reduced system
-r = 6;
+r = 8;
 Ar = An(1:r,1:r);
 Br = Bn(1:r,:);
 Cr = Cn(:,1:r);
