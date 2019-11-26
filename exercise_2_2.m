@@ -1,12 +1,13 @@
 [A] = imread('Siep_weiland.jpg');
-k = 25;
-use_index = false;
+k = 5;
+r = rank(double(A(:,:,1)));
+use_index = 0;
 if use_index
     [A,cmap]=rgb2ind(A,0);
     A = double(A);
     [U,S,V] = svd(A);
     X = svd_rank_red(U,S,V,k);
-    X = round(X);
+    X = round((X-min(X,[],'all'))/(max(X,[],'all')-min(X,[],'all'))*max(A,[],'all'));
     A = ind2rgb(A,cmap);
     X = ind2rgb(X,cmap);
 else
@@ -20,6 +21,11 @@ else
     X = uint8(X);
 end
 figure(1);
+subplot(1,2,1);
 imshow(A);
-figure(2);
+title("Siep",'FontSize',20)
+subplot(1,2,2);
 imshow(X)
+title('Siep','FontSize',ceil(20*k/r))
+imwrite(A,'Siep_original.jpg')
+imwrite(X,'Siep_smoll.jpg')
