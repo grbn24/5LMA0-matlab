@@ -27,5 +27,5 @@ title("Siep",'FontSize',20)
 subplot(1,2,2);
 imshow(X)
 title('Siep','FontSize',ceil(20*k/r))
-imwrite(A,'Siep_original.jpg')
-imwrite(X,'Siep_smoll.jpg')
+% imwrite(A,'Siep_original.jpg')
+% imwrite(X,'Siep_smoll.jpg')

@@ -32,7 +32,14 @@ Br = Bn(1:r,:);
 Cr = Cn(:,1:r);
 Dr = D-Cn*inv(An)*Bn+Cr*inv(Ar)*Br;
 sys_r = ss(Ar,Br,Cr,Dr);
+Pr = gram(sys_r,'c');
+Qr = gram(sys_r,'o');
 [Hr,woutr] = freqresp(sys_r,wout);
+isstable_r = all(real(eig(Ar))<0);
+isreach_r = rank(Pr)==rank(Ar);
+isobs_r = rank(Qr)==rank(Ar);
+fprintf("Reduced system stable: %s\nReduced system reachable: %s\nReduced system observable: %s\n",logicalstr(isstable_r+1),logicalstr(isreach_r+1),logicalstr(isobs_r+1));
+
 %% comparison plots
 figure(1);
 subplot(2,2,1);
