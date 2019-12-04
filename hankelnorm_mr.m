@@ -18,6 +18,14 @@ function [Ar, Br, Cr, Dr] = hankelnorm_mr(A,B,C,D,r)
     Dp = D;
     Gamma = P(1:n-s,1:n-s)^2-sv_r1^2*eye(n-s);
     %% step 4: Get unitary U
+    U = B(r+1:r+s,:)*pinv(C(:,r+1:r+s)');
+    %% step 5: Calculate all pass dilation
+    Ab = inv(Gamma)*(sv_r1^2*A(1:end-s,1:end-s)'+P(1:end-s,1:end-s)*A(1:end-s,1:end-s)*P(1:end-s,1:end-s)-sv_r1*C(:,1:end-s)'*U*B(1:end-s,:)');
+    Bb = inv(Gamma)*(P(1:end-s,1:end-s)*B(1:end-s,:)+sv_r1*C(:,1:end-s)'*U);
+    Cb = C(:,1:end-s)*P(1:end-s,1:end-s)+sv_r1*U*B(1:end-s,:)';
+    Db = D-sv_r1*U;
+    %% step 6: sort based on eigenvalues
     
+    %% step 7: output reduced form
 end
 
