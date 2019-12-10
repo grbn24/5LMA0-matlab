@@ -67,5 +67,5 @@ G_r = tf(sys_r);
 max_e = norm(G-G_r,inf);
 fprintf("Maximum error %.5f\n",max_e);
 subplot(2,2,3:4)
-bode(G,G_r);
+bode(G,G_r,G-G_r);
 legend(["Normal", sprintf("Reduced r = %d",r)]);
