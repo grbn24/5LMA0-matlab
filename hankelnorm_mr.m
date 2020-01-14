@@ -12,13 +12,23 @@ function [Ar, Br, Cr, Dr] = hankelnorm_mr(A,B,C,D,r)
     P(n-s+1:end,n-s+1:end) = eye(s)*sv_r1;
     Q = P;
     %% step 3: make system in the same structure and define gamma
-    Ap = A([1:r r+s+1:end r+1:r+s],[1:r r+s+1:end r+1:r+s]);
-    Bp = B([1:r r+s+1:end r+1:r+s],:);
-    Cp = C(:,[1:r r+s+1:end r+1:r+s]);
+    Pb = gram(sys,'c');
+    Qb = gram(sys,'o');
+    R = chol(Pb); 
+    R = R'; % matlab choleski suxx
+    [U,S,~] = svd(R'*Qb*R);
+    T = (S.^0.25)*U'*inv(R);
+    Ap = T*A*inv(T);
+    Bp = T*B;
+    Cp = C*inv(T);
     Dp = D;
+    Ap = Ap([1:r r+s+1:end r+1:r+s],[1:r r+s+1:end r+1:r+s]);
+    Bp = Bp([1:r r+s+1:end r+1:r+s],:);
+    Cp = Cp(:,[1:r r+s+1:end r+1:r+s]);
+    Dp = Dp;
     Gamma = P(1:n-s,1:n-s)^2-sv_r1^2*eye(n-s);
     %% step 4: Get unitary U
-    U = -1*pinv(C(:,r+1:r+s)')*B(r+1:r+s,:);
+    U = -1*pinv(C(:,r+1:r+s))*B(r+1:r+s,:);
     [U,~] = qr(U);
     %% step 5: Calculate all pass dilation
     Ab = inv(Gamma)*(sv_r1^2*A(1:end-s,1:end-s)'+P(1:end-s,1:end-s)*A(1:end-s,1:end-s)*P(1:end-s,1:end-s)-sv_r1*C(:,1:end-s)'*U*B(1:end-s,:)');

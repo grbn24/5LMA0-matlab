@@ -10,11 +10,14 @@ D = 0;
 sys_x = ss(A,B,C,D,1);
 sys_state = sys_x;
 sys_state.C = eye(2);
-[X] = lsim(sys_state,[1 0 0 0], 0:3, [0 0])'; % X should have n_states rows and n_t columns
+[X] = lsim(sys_state,[1; 0; 0; 0], 0:3, [0 0])'; % X should have n_states rows and n_t columns
 %% create POD basis
 [U,S,~] = svd(X);
 phi1 = U(:,1);
-
+a = U'*X;
+ar = [a(1:r,:); zeros(size(a,1)-r,size(a,2))];
+X_app = U'*ar;
+e = X_app-X
 
 
 
